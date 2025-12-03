@@ -104,11 +104,23 @@ app.delete("/api/user/favourites/:id",
     }
 );
 
+// Connect to MongoDB
 userService.connect()
-.then(() => {
-    app.listen(HTTP_PORT, () => { console.log("API listening on: " + HTTP_PORT) });
-})
-.catch((err) => {
+  .then(() => {
+    console.log("userService connected");
+
+    if (!process.env.VERCEL) {
+      app.listen(HTTP_PORT, () => {
+        console.log("API listening on: " + HTTP_PORT);
+      });
+    }
+  })
+  .catch((err) => {
     console.log("unable to start the server: " + err);
-    process.exit();
-});
+
+    if (!process.env.VERCEL) {
+      process.exit();
+    }
+  });
+
+module.exports = app;
