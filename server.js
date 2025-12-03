@@ -38,35 +38,29 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/api/user/register", (req, res) => {
-    userService.registerUser(req.body)
+  userService
+    .registerUser(req.body)
     .then((msg) => {
-        res.json({ "message": msg });
-    }).catch((msg) => {
-        res.status(422).json({ "message": msg });
+      res.json({ message: msg });
+    })
+    .catch((err) => {
+      console.error("Register error:", err);
+      res.status(422).json({ message: err.message || err });
     });
 });
 
 app.post("/api/user/login", (req, res) => {
-    userService.checkUser(req.body)
+  userService
+    .checkUser(req.body)
     .then((user) => {
-        // Build payload with _id and userName
-        const payload = {
-            _id: user._id,
-            userName: user.userName
-        };
-
-        // Sign JWT with secret from .env
-        const token = jwt.sign(payload, process.env.JWT_SECRET);
-
-        // Return token to client
-        res.json({ 
-            message: "login successful",
-            token: token
-        });
-    }).catch(msg => {
-        res.status(422).json({ "message": msg });
+      res.json({ message: "login successful" });
+    })
+    .catch((err) => {
+      console.error("Login error:", err);
+      res.status(422).json({ message: err.message || err });
     });
 });
+
 
 app.get("/api/user/favourites",
     passport.authenticate("jwt", { session: false }),
