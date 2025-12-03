@@ -62,6 +62,7 @@ app.post("/api/user/login", (req, res) => {
 });
 
 
+
 app.get("/api/user/favourites",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
