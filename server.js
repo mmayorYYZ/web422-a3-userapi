@@ -111,11 +111,19 @@ app.delete(
 userService
   .connect()
   .then(() => {
-    app.listen(HTTP_PORT, () => {
-      console.log("API listening on: " + HTTP_PORT);
-    });
+    console.log("Connected to MongoDB");
+
+    // Only start listening when NOT on Vercel
+    if (!process.env.VERCEL) {
+      app.listen(HTTP_PORT, () => {
+        console.log("API listening on: " + HTTP_PORT);
+      });
+    }
   })
   .catch((err) => {
     console.log("unable to start the server: " + err);
     process.exit();
   });
+
+// Export the app for Vercel
+module.exports = app;
